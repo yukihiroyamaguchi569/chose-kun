@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "調整さん - スケジュール調整ツール",
+  title: "調整くん - スケジュール調整ツール",
   description: "みんなの予定をサクッと調整。候補日を出して、◯△×で回答するだけ。",
 };
 
@@ -22,7 +22,7 @@ export default function RootLayout({
               </div>
               <div>
                 <h1 className="font-serif text-lg font-bold text-sumi tracking-wide leading-tight">
-                  調整さん
+                  調整くん
                 </h1>
                 <p className="text-[10px] text-usuzumi tracking-widest">
                   SCHEDULE COORDINATOR
@@ -38,7 +38,7 @@ export default function RootLayout({
 
         <footer className="border-t border-sumi/10 py-6 mt-12">
           <div className="max-w-4xl mx-auto px-4 text-center text-xs text-usuzumi">
-            調整さん — みんなの予定をサクッと調整
+            調整くん — みんなの予定をサクッと調整
           </div>
         </footer>
       </body>
