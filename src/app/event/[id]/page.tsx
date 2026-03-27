@@ -4,6 +4,17 @@ import { useEffect, useState, useCallback, useRef, use } from 'react';
 import Link from 'next/link';
 import type { Event, Candidate, Response, Comment, Availability } from '@/types';
 
+type EventPayload = {
+  event: Event;
+  candidates: Candidate[];
+  responses: Response[];
+  comments: Comment[];
+};
+
+function isEventPayload(payload: EventPayload | { error?: string } | null): payload is EventPayload {
+  return Boolean(payload && 'event' in payload);
+}
+
 const AVAILABILITY_OPTIONS: { value: Availability; label: string; color: string; bg: string }[] = [
   { value: 'maru', label: '◯', color: 'text-matcha', bg: 'bg-matcha/10' },
   { value: 'sankaku', label: '△', color: 'text-kincha', bg: 'bg-kincha/10' },
@@ -59,26 +70,21 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
 
   const fetchEvent = useCallback(async () => {
     try {
-      const { getSupabase } = await import('@/lib/supabase');
-      const supabase = getSupabase();
+      const res = await fetch(`/api/events/${eventId}`);
+      const payload = (await res.json().catch(() => null)) as EventPayload | { error?: string } | null;
 
-      const [eventRes, candRes, respRes, commRes] = await Promise.all([
-        supabase.from('events').select('*').eq('id', eventId).single(),
-        supabase.from('candidates').select('*').eq('event_id', eventId).order('sort_order'),
-        supabase.from('responses').select('*').eq('event_id', eventId).order('created_at'),
-        supabase.from('comments').select('*').eq('event_id', eventId).order('created_at'),
-      ]);
-
-      if (eventRes.error || !eventRes.data) {
-        setError('イベントが見つかりませんでした');
+      if (!res.ok || !isEventPayload(payload)) {
+        const errorMessage =
+          payload && !isEventPayload(payload) ? payload.error : 'イベントが見つかりませんでした';
+        setError(errorMessage || 'イベントが見つかりませんでした');
         return;
       }
 
-      setEvent(eventRes.data);
-      const cands = candRes.data || [];
+      setEvent(payload.event);
+      const cands = payload.candidates || [];
       setCandidates(cands);
-      setResponses(respRes.data || []);
-      setComments(commRes.data || []);
+      setResponses(payload.responses || []);
+      setComments(payload.comments || []);
 
       // 初回ロード時はデフォルトで全候補を◯に
       if (!initializedRef.current) {
