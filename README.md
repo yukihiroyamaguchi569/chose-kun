@@ -35,15 +35,13 @@ npm install
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
 APP_BASE_URL=http://localhost:3000
 CRON_SECRET=your-random-cron-secret
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/your/webhook/url
 ```
 
 - `NEXT_PUBLIC_SUPABASE_URL` — Supabase ダッシュボードの **Project Overview** トップに表示されています
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — **Project Settings → API Keys** の「Legacy anon, service_role API keys」タブにある **anon public** の値を使用します
 - `SUPABASE_SERVICE_ROLE_KEY` — 同じ画面にある **service_role** の値です。通知状態の更新に使います
 - `SLACK_WEBHOOK_URL` — Slack Incoming Webhook のURL
 - `APP_BASE_URL` — Slack通知本文に載せるイベントURLのベースURL
