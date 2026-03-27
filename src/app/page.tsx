@@ -51,6 +51,8 @@ export default function Home() {
   const [title, setTitle] = useState('');
   const [memo, setMemo] = useState('');
   const [candidatesText, setCandidatesText] = useState('');
+  const [expectedResponses, setExpectedResponses] = useState('');
+  const [reminderAfterDays, setReminderAfterDays] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [viewMonth, setViewMonth] = useState(() => {
     const today = new Date();
@@ -87,6 +89,24 @@ export default function Home() {
     e.preventDefault();
     if (!title.trim() || !candidatesText.trim()) return;
 
+    const notificationEnabled =
+      Boolean(expectedResponses.trim()) || Boolean(reminderAfterDays.trim());
+    const expectedResponsesValue = expectedResponses.trim() ? Number(expectedResponses) : null;
+    const reminderAfterDaysValue = reminderAfterDays.trim() ? Number(reminderAfterDays) : null;
+
+    if (notificationEnabled) {
+      const hasValidNotificationSettings =
+        Number.isInteger(expectedResponsesValue) &&
+        (expectedResponsesValue ?? 0) > 0 &&
+        Number.isInteger(reminderAfterDaysValue) &&
+        (reminderAfterDaysValue ?? 0) > 0;
+
+      if (!hasValidNotificationSettings) {
+        alert('通知を使う場合は、目安回答人数と通知日数を正しく入力してください。');
+        return;
+      }
+    }
+
     setIsSubmitting(true);
     try {
       const candidates = candidatesText
@@ -97,7 +117,13 @@ export default function Home() {
       const res = await fetch('/api/events', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: title.trim(), memo: memo.trim(), candidates }),
+        body: JSON.stringify({
+          title: title.trim(),
+          memo: memo.trim(),
+          candidates,
+          expectedResponses: notificationEnabled ? expectedResponsesValue : null,
+          reminderAfterDays: notificationEnabled ? reminderAfterDaysValue : null,
+        }),
       });
 
       if (!res.ok) throw new Error('Failed to create event');
@@ -269,6 +295,47 @@ export default function Home() {
                 <p className="mt-3 text-[11px] text-usuzumi">
                   追加済みの日付は赤く表示されます。必要なら左側で直接編集できます。
                 </p>
+              </div>
+            </div>
+          </div>
+
+          {/* STEP 3 */}
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-6 h-6 rounded-full bg-aka text-white text-xs font-bold flex items-center justify-center">3</span>
+              <p className="font-bold text-sumi text-sm">Slack通知（任意）</p>
+            </div>
+            <p className="text-xs text-usuzumi mb-3">
+              1つのURLを共有したまま、回答が目安人数に達した時か、指定日数が経過した時に Slack チャンネルへ通知します
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div>
+                <label htmlFor="expectedResponses" className="block text-xs font-medium text-usuzumi mb-2">
+                  目安回答人数
+                </label>
+                <input
+                  id="expectedResponses"
+                  type="number"
+                  min="1"
+                  value={expectedResponses}
+                  onChange={e => setExpectedResponses(e.target.value)}
+                  placeholder="10"
+                  className="w-full px-4 py-3 rounded-xl border border-sumi/10 bg-washi/50 text-sumi placeholder:text-usuzumi/60 focus:outline-none focus:ring-2 focus:ring-aka/30 focus:border-aka/40 transition-all text-sm"
+                />
+              </div>
+              <div>
+                <label htmlFor="reminderAfterDays" className="block text-xs font-medium text-usuzumi mb-2">
+                  通知までの日数
+                </label>
+                <input
+                  id="reminderAfterDays"
+                  type="number"
+                  min="1"
+                  value={reminderAfterDays}
+                  onChange={e => setReminderAfterDays(e.target.value)}
+                  placeholder="3"
+                  className="w-full px-4 py-3 rounded-xl border border-sumi/10 bg-washi/50 text-sumi placeholder:text-usuzumi/60 focus:outline-none focus:ring-2 focus:ring-aka/30 focus:border-aka/40 transition-all text-sm"
+                />
               </div>
             </div>
           </div>

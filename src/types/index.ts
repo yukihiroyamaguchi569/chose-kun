@@ -4,6 +4,8 @@ export interface Event {
   id: string;
   title: string;
   memo: string;
+  expected_responses: number | null;
+  reminder_after_days: number | null;
   created_at: string;
 }
 
@@ -28,5 +30,12 @@ export interface Comment {
   event_id: string;
   name: string;
   body: string;
+  created_at: string;
+}
+
+export interface EventNotification {
+  event_id: string;
+  notification_sent_at: string | null;
+  notification_reason: 'expected_responses_reached' | 'reminder_after_days_elapsed' | null;
   created_at: string;
 }

@@ -6,6 +6,8 @@ create table if not exists events (
   id text primary key,
   title text not null,
   memo text default '',
+  expected_responses int,
+  reminder_after_days int,
   created_at timestamptz default now()
 );
 
@@ -36,6 +38,13 @@ create table if not exists comments (
   created_at timestamptz default now()
 );
 
+create table if not exists event_notifications (
+  event_id text primary key references events(id) on delete cascade,
+  notification_sent_at timestamptz,
+  notification_reason text,
+  created_at timestamptz default now()
+);
+
 -- インデックス
 create index if not exists idx_candidates_event on candidates(event_id);
 create index if not exists idx_responses_event on responses(event_id);
@@ -46,6 +55,7 @@ alter table events enable row level security;
 alter table candidates enable row level security;
 alter table responses enable row level security;
 alter table comments enable row level security;
+alter table event_notifications enable row level security;
 
 create policy "Anyone can read events" on events for select using (true);
 create policy "Anyone can create events" on events for insert with check (true);
@@ -59,3 +69,7 @@ create policy "Anyone can update responses" on responses for update using (true)
 
 create policy "Anyone can read comments" on comments for select using (true);
 create policy "Anyone can create comments" on comments for insert with check (true);
+
+create policy "No one can read event notifications" on event_notifications for select using (false);
+create policy "No one can create event notifications directly" on event_notifications for insert with check (false);
+create policy "No one can update event notifications directly" on event_notifications for update using (false);

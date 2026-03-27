@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -16,7 +17,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <header className="border-b border-sumi/10 bg-shironeri/80 backdrop-blur-sm sticky top-0 z-50">
           <div className="max-w-4xl mx-auto px-4 py-4 flex items-center gap-3">
-            <a href="/" className="flex items-center gap-3 group">
+            <Link href="/" className="flex items-center gap-3 group">
               <div className="w-9 h-9 rounded-lg bg-aka flex items-center justify-center text-white font-serif font-bold text-lg shadow-sm group-hover:shadow-md transition-shadow">
                 調
               </div>
@@ -28,7 +29,7 @@ export default function RootLayout({
                   SCHEDULE COORDINATOR
                 </p>
               </div>
-            </a>
+            </Link>
           </div>
         </header>
 

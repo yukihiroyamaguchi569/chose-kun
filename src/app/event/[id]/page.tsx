@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef, use } from 'react';
+import Link from 'next/link';
 import type { Event, Candidate, Response, Comment, Availability } from '@/types';
 
 const AVAILABILITY_OPTIONS: { value: Availability; label: string; color: string; bg: string }[] = [
@@ -177,7 +178,7 @@ export default function EventPage({ params }: { params: Promise<{ id: string }> 
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
         <p className="text-aka font-bold mb-2">{error || 'エラーが発生しました'}</p>
-        <a href="/" className="text-sm text-fuji hover:underline">トップに戻る</a>
+        <Link href="/" className="text-sm text-fuji hover:underline">トップに戻る</Link>
       </div>
     );
   }

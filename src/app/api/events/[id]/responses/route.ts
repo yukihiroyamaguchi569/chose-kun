@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { after } from 'next/server';
+import { maybeSendExpectedResponsesNotification } from '@/lib/event-notifications';
 import { getSupabase } from '@/lib/supabase';
 
 export async function POST(
@@ -22,6 +24,14 @@ export async function POST(
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  after(async () => {
+    try {
+      await maybeSendExpectedResponsesNotification(eventId);
+    } catch (notificationError) {
+      console.error('Failed to send response progress notification', notificationError);
+    }
+  });
 
   return NextResponse.json(data);
 }
