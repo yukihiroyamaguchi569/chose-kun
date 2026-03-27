@@ -27,11 +27,16 @@ export default function Home() {
         body: JSON.stringify({ title: title.trim(), memo: memo.trim(), candidates }),
       });
 
-      if (!res.ok) throw new Error('Failed to create event');
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        throw new Error(data?.error || 'Failed to create event');
+      }
       const { id } = await res.json();
       router.push(`/event/${id}`);
-    } catch {
-      alert('イベントの作成に失敗しました。');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'イベントの作成に失敗しました。';
+      console.error('Failed to create event', error);
+      alert(`イベントの作成に失敗しました。\n${message}`);
       setIsSubmitting(false);
     }
   };
