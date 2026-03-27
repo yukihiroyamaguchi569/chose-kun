@@ -40,7 +40,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 ### 3. データベースの作成
 
-`supabase/schema.sql` を Supabase の SQL エディタで実行してテーブルを作成。
+Supabase ダッシュボードの左カラムから **SQL Editor** を開き、`supabase/schema.sql` の内容を貼り付けて **Run** を実行してテーブルを作成。
 
 ### 4. 開発サーバーの起動
 
