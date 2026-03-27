@@ -126,11 +126,21 @@ export default function Home() {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to create event');
-      const { id } = await res.json();
+      const payload = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(payload?.error || 'イベントの作成に失敗しました。');
+      }
+
+      if (!payload?.id) {
+        throw new Error('イベントIDの取得に失敗しました。');
+      }
+
+      const { id } = payload;
       router.push(`/event/${id}`);
-    } catch {
-      alert('イベントの作成に失敗しました。');
+    } catch (error) {
+      console.error('Failed to create event', error);
+      alert(error instanceof Error ? error.message : 'イベントの作成に失敗しました。');
       setIsSubmitting(false);
     }
   };
