@@ -67,6 +67,8 @@ http://localhost:3000 でアクセスできます。
 
 Vercel にデプロイ可能。GitHub リポジトリを連携すると `main` ブランチへのプッシュで自動デプロイされます。
 
+本番URL: https://nextjs-boilerplate-henna-five-47.vercel.app/
+
 `vercel.json` には `GET /api/cron/event-notifications` を 1日1回起動する Cron 設定を入れています。スケジュールは UTC で `0 0 * * *` です。
 
 ## 回答進捗通知
