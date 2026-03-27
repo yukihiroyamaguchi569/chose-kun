@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabaseAdmin } from '@/lib/supabase-admin';
 
 export async function POST(
   request: NextRequest,
@@ -12,7 +12,7 @@ export async function POST(
     return NextResponse.json({ error: 'name and body are required' }, { status: 400 });
   }
 
-  const supabase = getSupabase();
+  const supabase = getSupabaseAdmin();
   const { data, error } = await supabase
     .from('comments')
     .insert({ event_id: eventId, name, body })

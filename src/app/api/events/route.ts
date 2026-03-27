@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { notificationsAreConfigured } from '@/lib/event-notifications';
-import { getSupabase } from '@/lib/supabase';
 import { getSupabaseAdmin } from '@/lib/supabase-admin';
 import { nanoid } from 'nanoid';
 
@@ -45,7 +44,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const supabase = getSupabase();
+  const supabase = getSupabaseAdmin();
   const id = nanoid(10);
 
   const { error: eventError } = await supabase
